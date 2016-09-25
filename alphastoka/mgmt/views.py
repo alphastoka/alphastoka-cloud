@@ -22,7 +22,7 @@ def results(request):
 			"dbs": mongo_client.database_names()
 		})
 	mongo_db = mongo_client[db]
-	humans = mongo_db.human.find({}).skip(0).limit(20)
+	humans = mongo_db.human.find({}).sort([("followed_by", -1)]).skip(0).limit(200)
 	
 	# self.mongo_db = self.mongo_client['stoka_' + ]
 	return render(request, "results.html", {
