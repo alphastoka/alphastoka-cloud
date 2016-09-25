@@ -2,8 +2,10 @@ from django.shortcuts import render
 from docker import Client
 from django.http import HttpResponseRedirect
 from django.contrib import messages
+from pymongo import MongoClient
 
 cli = Client(base_url='unix:///var/run/docker.sock')
+mongo_client = MongoClient("mongodb://54.169.89.105:27017")
 
 # Create your views here.
 def index(request):
@@ -14,7 +16,19 @@ def index(request):
 	})
 
 def results(request):
-	return render(request, 'results.html')
+	db = request.GET.get("family")
+	if not db:
+		return render(request, "results.html", {
+			"dbs": mongo_client.database_names()
+		})
+	mongo_db = mongo_client[db]
+	humans = mongo_db.human.find({}).skip(0).limit(20)
+	
+	# self.mongo_db = self.mongo_client['stoka_' + ]
+	return render(request, "results.html", {
+		"family": db,
+		"humans": humans
+	})
 
 def mgmt_murder(request, container_id):
 	# cli = Client(base_url='unix:///var/run/docker.sock')

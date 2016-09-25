@@ -5,7 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="/static/bower_components/patternfly/dist/css/patternfly.css">
 		<link rel="stylesheet" type="text/css" href="/static/bower_components/patternfly/dist/css/patternfly-additions.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css">
-
+		
 		<script src="/static/bower_components/jquery/dist/jquery.min.js"></script>
 		<script src="/static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 		<script src="/static/bower_components/patternfly/dist/js/patternfly.min.js"></script>
@@ -27,13 +27,13 @@
 				</a>
 			</div>
 			<ul class="nav navbar-nav navbar-primary">
-				<li class="active">
+				<li class="{%block first_active%} {%endblock%}">
 					<a href="/">Strategy</a>
 				</li>
-				<li>
+				<li class="{%block second_active%} {%endblock%}">
 					<a href="#">Analysis</a>
 				</li>
-				<li>
+				<li class="{%block third_active%} {%endblock%}">
 					<a href="/results">Result</a>
 				</li>
 			</ul>

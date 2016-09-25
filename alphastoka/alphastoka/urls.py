@@ -16,14 +16,13 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from mgmt import views
-from browse import views as browse_views
 from django.template.defaulttags import register
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^mgmt/create', views.mgmt_create),
     url(r'^mgmt/murder/([^\s]+)', views.mgmt_murder),
-    url(r'^/results', browse_views.index),
+    url(r'^results', views.results),
     # default first view
     url(r'^$', views.index)
 ]

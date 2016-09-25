@@ -1,5 +1,7 @@
-{% extends "base.html" %} {% block content %}
 
+{% extends "base.html" %} 
+{% block first_active %}active{% endblock %}
+{% block content %}
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<form method="post" class="form-horizontal" action="/mgmt/create">
 		{% csrf_token %}
@@ -26,7 +28,7 @@
 							<option value="stoka-ig">Instagram</option>
 							<option disabled>YouTube (Coming Soon)</option>
 							<option disabled>Facebook (Coming Soon)</option>
-					</select>
+							</select>
 							<span class="help-block">What is the Stoka trained to Stoke?</span>
 						</div>
 					</div>
@@ -64,6 +66,7 @@
 </div>
 
 <!--end modal-->
+<!--tooblar-->
 <div class="container-fluid">
 	<div class="row toolbar-pf">
 		<div class="col-sm-12">
