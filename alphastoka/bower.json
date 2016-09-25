@@ -1,0 +1,20 @@
+{
+  "name": "alphastoka",
+  "authors": [
+    "Pat Sabpisal <ssabpisa@me.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "patternfly": "^3.11.0"
+  }
+}

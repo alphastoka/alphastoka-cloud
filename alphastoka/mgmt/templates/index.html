@@ -1,0 +1,231 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<form method="post" class="form-horizontal" action="/mgmt/create">
+		{% csrf_token %}
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <span class="pficon pficon-close"></span>
+        </button>
+					<h2 class="modal-title" id="myModalLabel">New Stoka</h2>
+				</div>
+				<div class="modal-body">
+						<div class="form-group">
+						<label class="col-sm-3 control-label" for="textInput-modal-markup">Family</label>
+						<div class="col-sm-9">
+							<input type="text" id="textInput2-modal-markup" name="group_name" class="form-control" value="Default">
+							<span class="help-block">Family that you group this Stoka to, if not set will be homeless.</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="textInput-modal-markup">Stoka DNA</label>
+						<div class="col-sm-9">
+							<select class="selectpicker" name="dna">
+							<option value="stoka-ig">Instagram</option>
+							<option disabled>YouTube (Coming Soon)</option>
+							<option disabled>Facebook (Coming Soon)</option>
+					</select>
+							<span class="help-block">What is the Stoka trained to Stoke?</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="textInput-modal-markup">Discover from</label>
+						<div class="col-sm-9">
+							<label class="checkbox-inline"><input type="checkbox" value="followers" checked disabled>followers</label>
+							<label class="checkbox-inline"><input type="checkbox" value="suggested" checked disabled>suggested</label>
+							<span class="help-block">Customize how Stoka discover new target</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="textInput2-modal-markup">Post Count</label>
+						<div class="col-sm-9">
+							<input type="text" id="textInput2-modal-markup" name="max_post" class="form-control" placeholder="12" maxlength="2" max="20">
+							<span class="help-block">How many posts (media) to fetch per user. (Lower = faster)</span>
+						</div>
+
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="textInput3-modal-markup">Seed Username</label>
+						<div class="col-sm-9">
+							<input type="text" id="textInput3-modal-markup" name="seeder_username" class="form-control" placeholder="Example: pimtha">
+							<span class="help-block">Starting node that Stoka will start working from.</span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary">Create Instance</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<!--end modal-->
+<div class="container-fluid">
+	<div class="row toolbar-pf">
+		<div class="col-sm-12">
+			<form class="toolbar-pf-actions">
+				<div class="form-group toolbar-pf-filter">
+					<label class="sr-only" for="filter">Name</label>
+					<div class="input-group">
+						<div class="input-group-btn">
+							<button type="button" class="btn btn-default">Name</button>
+						</div>
+						<!-- /btn-group -->
+						<input type="text" class="form-control" id="filter" placeholder="Filter By Name...">
+					</div>
+					<!-- /input-group -->
+				</div>
+				<div class="form-group">
+					<button data-toggle="modal" data-target="#myModal" class="btn btn-success" type="button"><i class="fa fa-plus"></i> Spawn a Stoka</button>
+					<div class="dropdown btn-group  dropdown-kebab-pf">
+						<button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebab" data-toggle="dropdown" aria-haspopup="true"
+							aria-expanded="true">
+									<span class="fa fa-ellipsis-v"></span>
+									</button>
+						<ul class="dropdown-menu " aria-labelledby="dropdownKebab">
+							<li><a href="#">Pricing</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="#">Help</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="toolbar-pf-action-right">
+					<div class="form-group toolbar-pf-find">
+						<button class="btn btn-link btn-find" type="button">
+									<span class="fa fa-search"></span>
+									</button>
+						<div class="find-pf-dropdown-container">
+							<input type="text" class="form-control" id="find" placeholder="Find By Keyword...">
+							<div class="find-pf-buttons">
+								<span class="find-pf-nums">1 of 3</span>
+								<button class="btn btn-link" type="button">
+											<span class="fa fa-angle-up"></span>
+											</button>
+								<button class="btn btn-link" type="button">
+											<span class="fa fa-angle-down"></span>
+											</button>
+								<button class="btn btn-link btn-find-close" type="button">
+											<span class="pficon pficon-close"></span>
+											</button>
+							</div>
+						</div>
+					</div>
+					<div class="form-group toolbar-pf-view-selector">
+						<button class="btn btn-link"><i class="fa fa-th"></i></button>
+						<button class="btn btn-link active"><i class="fa fa-th-list"></i></button>
+					</div>
+				</div>
+			</form>
+			<div class="row toolbar-pf-results">
+				<div class="col-sm-12">
+					<ul class="list-inline">
+						<li>
+							<span class="label label-info">
+								Memory usage: 500 MB
+							</span>
+						</li>
+						<li>
+							<span class="label label-info">
+								Nodes: {{ containers | length }}
+							</span>
+						</li>
+					</ul>
+				</div>
+				<!-- /col -->
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /col -->
+	</div>
+	<!-- /row -->
+</div>
+<!-- /container -->
+<div class="list-group list-view-pf">
+	{% for container in containers %} {% if "astoka.seeder" in container.Labels %}
+	<div class="list-group-item list-view-pf-stacked list-view-pf-top-align">
+		<div class="list-view-pf-actions">
+			<button class="btn btn-danger">Murder Stoka</button>
+			<div class="dropdown pull-right dropdown-kebab-pf">
+				<button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight3" data-toggle="dropdown" aria-haspopup="true"
+					aria-expanded="true">
+													<span class="fa fa-ellipsis-v"></span>
+													</button>
+				<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight3">
+					<li><a href="#">Action</a></li>
+					<li><a href="#">Another action</a></li>
+					<li><a href="#">Something else here</a></li>
+					<li role="separator" class="divider"></li>
+					<li><a href="#">Separated link</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="list-view-pf-main-info">
+			<div class="list-view-pf-left">
+				<span class="fa fa-instagram list-view-pf-icon-sm"></span>
+			</div>
+			<div class="list-view-pf-body">
+				<div class="list-view-pf-description">
+					<div class="list-group-item-heading">
+						{{container.Labels | get_item:"astoka.family" }} / {{ container.Names | first | cut:"/" }}
+					</div>
+					<div class="list-group-item-text">
+						<strong>Seed by</strong> <a href="https://instagram.com/{{ container.Labels | get_item:" astoka.seeder " }}">{{ container.Labels | get_item:"astoka.seeder" }}</a>
+					</div>
+				</div>
+				<div class="list-view-pf-additional-info">
+					<div class="list-view-pf-additional-info-item list-view-pf-additional-info-item-stacked">
+						<strong>-</strong> Discovered
+					</div>
+					<div class="list-view-pf-additional-info-item list-view-pf-additional-info-item-stacked">
+						<strong>-</strong> Discovery / min
+					</div>
+					<div class="list-view-pf-additional-info-item list-view-pf-additional-info-item-stacked">
+						<strong>{{container.Created }}</strong> Created
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %} {% endfor %} {% if containers|length == 1 %}
+	<div class="list-group-item list-view-pf-stacked list-view-pf-equalized-column">
+		<div class="list-view-pf-main-info">
+			<div class="list-view-pf-left">
+				<img class="img-circle" src="/static/getstarted.png" />
+			</div>
+			<div class="list-view-pf-body">
+
+				<div class="list-view-pf-description">
+					<h1>You have no running Stoka</h1>
+					Click on <strong>Spawn a Stoka</strong> to start one now!
+					<p>
+						STOKA CLOUD allows you to make your own crawling and collection strategy.
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %} {% if containers|length == 0 %}
+	<div class="list-group-item list-view-pf-stacked list-view-pf-equalized-column">
+		<div class="list-view-pf-main-info">
+			<div class="list-view-pf-left">
+				<span class="pficon pficon-error-circle-o list-view-pf-icon-md list-view-pf-icon-danger"></span>
+			</div>
+			<div class="list-view-pf-body">
+
+				<div class="list-view-pf-description">
+					<div class="list-group-item-heading">
+						Service is Down
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %} {% endblock %}
+
+
+
+</div>

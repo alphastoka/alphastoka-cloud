@@ -1,0 +1,42 @@
+<html>
+	<head>
+		<title>ALPHASTOKA CLOUD</title>
+		<link rel="stylesheet" type="text/css" href="/static/bower_components/bootstrap/dist/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="/static/bower_components/patternfly/dist/css/patternfly.css">
+		<link rel="stylesheet" type="text/css" href="/static/bower_components/patternfly/dist/css/patternfly-additions.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css">
+
+		<script src="/static/bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="/static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script src="/static/bower_components/patternfly/dist/js/patternfly.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
+
+	</head>
+	<body class="cards-pf">
+		<nav class="navbar navbar-default navbar-pf" role="navigation">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+					STOKA <strong>CLOUD</strong>
+				</a>
+			</div>
+			<ul class="nav navbar-nav navbar-primary">
+				<li class="active">
+					<a href="#">Strategy</a>
+				</li>
+				<li>
+					<a href="#">Analysis</a>
+				</li>
+				<li>
+					<a href="#">Result</a>
+				</li>
+			</ul>
+		</nav>
+		{% block content %}{% endblock %}
+	</body>
+</html>
