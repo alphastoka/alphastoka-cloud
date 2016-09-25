@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>ALPHASTOKA CLOUD</title>
+		<title>STOKA Cloud</title>
 		<link rel="stylesheet" type="text/css" href="/static/bower_components/bootstrap/dist/css/bootstrap.css">
 		<link rel="stylesheet" type="text/css" href="/static/bower_components/patternfly/dist/css/patternfly.css">
 		<link rel="stylesheet" type="text/css" href="/static/bower_components/patternfly/dist/css/patternfly-additions.css">
@@ -13,6 +13,7 @@
 
 	</head>
 	<body class="cards-pf">
+		
 		<nav class="navbar navbar-default navbar-pf" role="navigation">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-1">
@@ -27,16 +28,26 @@
 			</div>
 			<ul class="nav navbar-nav navbar-primary">
 				<li class="active">
-					<a href="#">Strategy</a>
+					<a href="/">Strategy</a>
 				</li>
 				<li>
 					<a href="#">Analysis</a>
 				</li>
 				<li>
-					<a href="#">Result</a>
+					<a href="/results">Result</a>
 				</li>
 			</ul>
 		</nav>
+
+		{% if messages %}
+			{% for message in messages %}
+			<div {% if message.tags %} class="alert-{{ message.tags }} alert" {% endif %}>
+				{% if message.tags == 'danger' %}<span class="pficon pficon-error-circle-o"></span>{% endif %}
+				{% if message.tags == 'success' %}<span class="pficon pficon-ok"></span>{% endif %}
+				{{ message }}</div>
+			{% endfor %}
+		{% endif %}
+
 		{% block content %}{% endblock %}
 	</body>
 </html>
