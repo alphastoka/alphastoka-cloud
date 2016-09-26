@@ -52,6 +52,8 @@ def results(request):
 		"count": count,
 		"humans": humans
 	})
+def processors(request):
+	return render(request, "processors.html")
 
 def mgmt_murder(request, container_id):
 	# cli = Client(base_url='unix:///var/run/docker.sock')

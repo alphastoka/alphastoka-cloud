@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^mgmt/create', views.mgmt_create),
     url(r'^mgmt/murder/([^\s]+)', views.mgmt_murder),
     url(r'^results', views.results),
-    url(r'^processors', views.processor),
+    url(r'^processors', views.processors),
     # default first view
     url(r'^$', views.index)
 ]
