@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^mgmt/create', views.mgmt_create),
     url(r'^mgmt/murder/([^\s]+)', views.mgmt_murder),
+    url(r'^results/export', views.results_export),
     url(r'^results', views.results),
     url(r'^processors', views.processors),
     # default first view

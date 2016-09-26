@@ -1,4 +1,6 @@
 {% extends "base.html" %} 
+{% load humanize %}
+
 {% block third_active %}active{% endblock %} 
 {% block content %}
 
@@ -10,28 +12,28 @@
                     <label class="sr-only" for="filter">Name</label>
                     <div class="input-group">
                         <div class="input-group-btn">
-                            <button type="button" class="btn btn-default">Name</button>
+                            <button type="button" class="btn btn-default">Search</button>
                         </div>
                         <!-- /btn-group -->
-                        <input type="text" class="form-control" id="filter" placeholder="Filter By Name...">
+                        <input type="text" class="form-control" id="filter" placeholder="">
                     </div>
                     <!-- /input-group -->
                 </div>
                 <div class="form-group">
                     <div class="dropdown">
                         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                            Collection
+                        {{current_collection}}
                         <span class="caret"></span>
                     </button>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Instagram</a></li>
-                            <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#">YouTube</a></li>
-                            <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#">Facebook</a></li>
+                            {% for collection in collections %}
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="results?family={{family}}&collection={{collection}}">{{collection}}</a></li>
+                            {%endfor%}
                         </ul>
                     </div>
                 </div>
                 <div class="form-group">
-                    <button data-toggle="modal" data-target="#myModal" class="btn btn-primary" type="button">Export Everything</button>
+                    <a href="results/export?family={{family}}&collection={{current_collection}}" class="btn btn-success" type="button">Export Everything</a>
                 </div>
                 <div class="toolbar-pf-action-right">
                     <div class="form-group toolbar-pf-find">
@@ -66,20 +68,16 @@
                         {% if family %}
                         <li>
                             <span class="label label-info">
-								{{family}} ({{ count | intcomma }})
+								{{current_collection}} / {{family}} ({{ count | intcomma }})
+							</span>
+                        </li>
+                        
+                        <li>
+                            <span class="label label-default">
+								No active filter
 							</span>
                         </li>
                         {% endif %}
-                        <li>
-                            <span class="label label-default">
-								> 10,000 Followers
-							</span>
-                        </li>
-                        <li>
-                            <span class="label label-default">
-								> 3,000 Followers
-							</span>
-                        </li>
                     </ul>
                 </div>
                 <!-- /col -->
@@ -90,18 +88,44 @@
     </div>
     <!-- /row -->
 </div>
+{% if count == 0 %}
+	<div class="list-group-item list-view-pf-stacked list-view-pf-equalized-column">
+		<div class="list-view-pf-main-info">
+			<div class="list-view-pf-left">
+				<img class="img-circle" src="/static/getstarted2.png" />
+			</div>
+			<div class="list-view-pf-body">
+
+				<div class="list-view-pf-description">
+					<h1>Getting Started</h1>
+					Click on Strategy tab to start spawning Stoka.
+				</div>
+			</div>
+		</div>
+	</div>
+{% endif %}
+
 <div class="container-fluid container-cards-pf">
+
+
+
     <div class="row row-cards-pf">
         {% for human in humans %}
+        {% if human.logo_url or human.profile_pic_url %}
         <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
             
             <div class="card-pf card-pf-view card-pf-view-select card-pf-view-multi-select">
                 <div class="card-pf-body">
                     <div class="card-pf-top-element">
+                       {% if current_collection == "instagram"  %}
                        <img class="card-pf-icon-circle" style="width:100px;height:100px" src="{{human.profile_pic_url}}"/>
+                       {%else%}
+                       <img class="card-pf-icon-circle" style="width:100px;height:100px" src="{{human.logo_url}}"/>
+                       {%endif%}
                     </div>
                     <h2 class="card-pf-title text-center">
-                        <a href="https://instagram.com/{{human.username}}">{{human.username}}</a>
+                        <a href="https://instagram.com/{{human.username}}">{{human.username}} </a>
+                        <a href="{{human.url}}">{{human.title | truncatechars:14}} </a>
                     </h2>
                     <div class="card-pf-items text-center">
                         <div class="card-pf-item">
@@ -112,6 +136,12 @@
                                 {%else%}
                                 {{human.followed_by.count|intcomma}}
                                 {%endif%}
+
+                                {%if human.stats.subscriber_count > 1000000 %}
+                                {{human.stats.subscriber_count|intword}}
+                                {%else%}
+                                {{human.stats.subscriber_count|intcomma}}
+                                {%endif%}
                             </span>
                         </div>
                         <!--<div class="card-pf-item">
@@ -120,7 +150,7 @@
                         </div>-->
                     </div>
                     <p class="card-pf-info text-center">
-                        <textarea style="outline:none;border:none;resize: none;" readonly>{{human.biography}}</textarea>
+                        <textarea style="outline:none;border:none;resize: none;" readonly>{{human.biography}}{{human.description}}</textarea>
                     </p>
                 </div>
                 <div class="card-pf-view-checkbox">
@@ -129,18 +159,16 @@
             </div>
             
         </div>
+        {%endif%}
         {%endfor%}
 
     </div>
     <div class="container-fluid">
         <ul class="pagination">
-        <li><a href="#">1</a></li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">5</a></li>
+            {% for page in pages%}
+            <li {% if page == current_page %}class="active"{%endif%}><a href="results?family={{family}}&collection={{current_collection}}&page={{page}}">{{page}}</a></li>
+            {% endfor %}
         </ul>
-
     </div>
 </div>
 
@@ -157,9 +185,16 @@
       </div>
       <div class="modal-body">
         <p>Please select a family. Note that if you have just started your Stoka it may take a while before result set populates.</p>
+
+        
         <select class="selectpicker" name="family">
             {% for db in dbs %}
 			<option value="{{ db }}" {% if not "stoka_" in db %}disabled{% endif %}>{{db}}</option>
+            {% endfor %}
+		</select>
+        <select class="selectpicker" name="collection">
+            {% for collection in collections %}
+			<option value="{{ collection }}">{{collection}}</option>
             {% endfor %}
 		</select>
       </div>
