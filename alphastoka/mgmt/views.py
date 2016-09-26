@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from docker import Client
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib import messages
 from pymongo import MongoClient
-import re, math
+import re, math, json, csv
 
 cli = Client(base_url='unix:///var/run/docker.sock')
 mongo_client = MongoClient("mongodb://54.169.89.105:27017")
@@ -54,6 +54,31 @@ def index(request):
 		"containers": containers,
 		"images": images
 	})
+
+def results_export(request):
+	db = request.GET.get("family")
+	collection = request.GET.get("collection", "instagram")
+	mongo_db = mongo_client[db]
+	humans = mongo_db[collection].find({}).sort([("stats.subscriber_count", -1), ("followed_by", -1)])
+	response = HttpResponse(content_type='text/csv')
+	for response in (response,):
+		fields = ['username', 'biography', '_dna', 'followed_by', 'category', 'predicted_age', '_seed_username', 'is_verified', 'media', 'profile_pic_url', '_id', 'id']
+		if collection == "youtube":
+			fields = [ 'phone', 'country', 'stats', 'subscriber_count', 'category', 'predicted_age', 'view_count', 'language', '_id', 'url', '_dna', '_seed_username', 'language', 'description', 'title', 'id', 'logo_url', 'email', 'medium']
+		writer = csv.DictWriter(response, fieldnames=fields)
+		writer.writeheader()
+		for x in humans:
+			if collection == 'youtube':
+				x['subscriber_count'] = x['stats']['subscriber_count']
+				x['view_count'] = x['stats']['view_count']
+				x['language'] = x['language'][0]
+				x['description'] = x['description'].strip()
+			writer.writerow(x)
+
+	
+	response['Content-Disposition'] = 'attachment; filename="export_%s_%s.csv"' % (db,collection)
+
+	return response
 
 def results(request):
 	db = request.GET.get("family")
