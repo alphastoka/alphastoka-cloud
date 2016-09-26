@@ -44,8 +44,8 @@ def mgmt_create(request):
 		seeder_username = request.POST.get("seeder_username")
 		envs = {
 			"RABBIT_HOST": "rabbitmqhost",
-			"RABBIT_USER": "rabbitmq",
-			"RABBIT_PASSWORD": "Nc77WrHuAR58yUPl",
+			"RABBIT_USR": "rabbitmq",
+			"RABBIT_PWD": "Nc77WrHuAR58yUPl",
 			"RABBIT_PORT": "5672",
 			"SEED_ID": "@" + seeder_username,
 			"GROUP_NAME" : group_name
