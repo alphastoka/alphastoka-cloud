@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from mgmt import views
+from datetime import datetime
 from django.template.defaulttags import register
 
 urlpatterns = [
@@ -30,3 +31,10 @@ urlpatterns = [
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
+@register.filter
+def unixtime(intTime):
+    that = datetime.fromtimestamp(int(intTime))
+    total_time=(datetime.now() - that)
+
+    return str(total_time).split(".")[0]
