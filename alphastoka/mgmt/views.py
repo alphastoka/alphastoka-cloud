@@ -82,6 +82,8 @@ def results(request):
 		"pages": pages,
 		"current_page" : current_page
 	})
+def processors(request):
+	return render(request, "processors.html")
 
 def mgmt_murder(request, container_id):
 	# cli = Client(base_url='unix:///var/run/docker.sock')
