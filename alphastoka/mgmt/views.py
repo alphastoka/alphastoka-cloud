@@ -3,6 +3,7 @@ from docker import Client
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from pymongo import MongoClient
+import re
 
 cli = Client(base_url='unix:///var/run/docker.sock')
 mongo_client = MongoClient("mongodb://54.169.89.105:27017")
@@ -11,8 +12,27 @@ mongo_client = MongoClient("mongodb://54.169.89.105:27017")
 def index(request):
 	cli = Client(base_url='unix:///var/run/docker.sock')
 	containers = cli.containers()
+	images = []
+	for im in cli.images():
+		if 'stoka-' in ','.join(im.get('RepoTags')):
+			im["Alias"] = im.get('RepoTags')[0].replace("stoka-", "").replace("ssabpisa/", "").replace("yt", "Youtube").replace("ig", "Instagram")
+			images.append(im)
+
+	for container in containers:
+		container["Discovered"] = 0 
+		container["Error"] = 0
+		sstr = cli.logs(container=container.get("Id"), tail=300)
+		m = re.findall(r"@astoka.progress\s+([0-9]+)", sstr.decode("utf-8"))
+		if(len(m) > 0):
+			container["Discovered"] = int(m[-1])
+		sstr = cli.logs(container=container.get("Id"), tail=300)
+		m = re.findall(r"@astoka.error\s+([0-9]+)", sstr.decode("utf-8"))
+		if(len(m) > 0):
+			container["Error"] = int(m[-1])
+
 	return render(request, "index.html", {
-		"containers": containers
+		"containers": containers,
+		"images": images
 	})
 
 def results(request):
@@ -22,11 +42,14 @@ def results(request):
 			"dbs": mongo_client.database_names()
 		})
 	mongo_db = mongo_client[db]
+
+	count = mongo_db.human.count({})
 	humans = mongo_db.human.find({}).sort([("followed_by", -1)]).skip(0).limit(200)
 	
 	# self.mongo_db = self.mongo_client['stoka_' + ]
 	return render(request, "results.html", {
 		"family": db,
+		"count": count,
 		"humans": humans
 	})
 

@@ -25,8 +25,9 @@
 						<label class="col-sm-3 control-label" for="textInput-modal-markup">Stoka DNA</label>
 						<div class="col-sm-9">
 							<select class="selectpicker" name="dna">
-							<option value="stoka-ig">Instagram</option>
-							<option disabled>YouTube (Coming Soon)</option>
+							{% for image in images %}
+							<option value="{{image.RepoTags|first}}">{{image.Alias}}</option>
+							{% endfor %}
 							<option disabled>Facebook (Coming Soon)</option>
 							</select>
 							<span class="help-block">What is the Stoka trained to Stoke?</span>
@@ -135,14 +136,14 @@
 	{% if "astoka.seeder" in container.Labels %}
 	<div class="list-group-item list-view-pf-stacked list-view-pf-top-align">
 		<div class="list-view-pf-actions">
-			<a class="btn btn-danger" href="/mgmt/murder/{{ container.Id }}"><i class="fa fa-trash"></i> Murder</a>
+			<a class="btn btn-danger" href="/mgmt/murder/{{ container.Id }}"><i class="pficon-close pf"></i> Kill Stoka</a>
 			<div class="dropdown pull-right dropdown-kebab-pf">
 				<button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight3" data-toggle="dropdown" aria-haspopup="true"
 					aria-expanded="true">
 													<span class="fa fa-ellipsis-v"></span>
 													</button>
 				<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight3">
-					<li><a href="/mgmt/murder/{{ container.Id }}">Murder</a></li>
+					<li><a href="/mgmt/murder/{{ container.Id }}">Kill Stoka</a></li>
 					<li><a href="/mgmt/duplicate/{{ container.Id }}">Duplicate</a></li>
 					<li role="separator" class="divider"></li>
 					<li><a href="#">More info</a></li>
@@ -162,17 +163,22 @@
 						<strong>Seed by</strong> <a href="https://instagram.com/{{ container.Labels | get_item:" astoka.seeder " }}">{{ container.Labels | get_item:"astoka.seeder" }}</a>
 					</div>
 				</div>
+
 				<div class="list-view-pf-additional-info">
-					<div class="list-view-pf-additional-info-item list-view-pf-additional-info-item-stacked">
-						<strong>-</strong> Discovered
-					</div>
-					<div class="list-view-pf-additional-info-item list-view-pf-additional-info-item-stacked">
-						<strong>-</strong> Discovery / min
-					</div>
-					<div class="list-view-pf-additional-info-item list-view-pf-additional-info-item-stacked">
-						<strong>{{container.Created }}</strong> Created
-					</div>
+				<div class="list-view-pf-additional-info-item">
+					<span class="pficon pficon-zone"></span>
+					<strong>{{container.Discovered}}</strong> Discovered
 				</div>
+				<div class="list-view-pf-additional-info-item">
+					<span class="fa-clock-o fa"></span>
+					<strong>{{container.Created  | unixtime }}</strong> hours
+				</div>
+				<div class="list-view-pf-additional-info-item">
+					<span class="pficon-error-circle-o pficon"></span>
+					<strong>{{container.Error }}</strong> Errors
+				</div>
+				</div>
+
 			</div>
 		</div>
 	</div>
