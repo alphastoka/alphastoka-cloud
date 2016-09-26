@@ -99,7 +99,7 @@
 				</div>
 				<div class="toolbar-pf-action-right">
 					<div class="form-group toolbar-pf-find">
-						<button class="btn btn-link btn-find" type="button">
+						<button class="btn btn-link btn-find disabled" type="button">
 									<span class="fa fa-search"></span>
 									</button>
 						<div class="find-pf-dropdown-container">
@@ -119,7 +119,7 @@
 						</div>
 					</div>
 					<div class="form-group toolbar-pf-view-selector">
-						<button class="btn btn-link"><i class="fa fa-th"></i></button>
+						<button class="btn btn-link disabled"><i class="fa fa-th"></i></button>
 						<button class="btn btn-link active"><i class="fa fa-th-list"></i></button>
 					</div>
 				</div>
@@ -136,7 +136,7 @@
 	{% if "astoka.seeder" in container.Labels %}
 	<div class="list-group-item list-view-pf-stacked list-view-pf-top-align">
 		<div class="list-view-pf-actions">
-			<a class="btn btn-danger" href="/mgmt/murder/{{ container.Id }}"><i class="pficon-close pf"></i> Kill Stoka</a>
+			<a class="btn btn-danger" href="/mgmt/murder/{{ container.Id }}"><i class="pficon-close pf"></i> KILL</a>
 			<div class="dropdown pull-right dropdown-kebab-pf">
 				<button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight3" data-toggle="dropdown" aria-haspopup="true"
 					aria-expanded="true">
@@ -144,23 +144,28 @@
 													</button>
 				<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight3">
 					<li><a href="/mgmt/murder/{{ container.Id }}">Kill Stoka</a></li>
-					<li><a href="/mgmt/duplicate/{{ container.Id }}">Duplicate</a></li>
+					<li><a href="#">Show gathered data</a></li>
 					<li role="separator" class="divider"></li>
-					<li><a href="#">More info</a></li>
+					<li><a href="#"><i class="fa fa-eye"></i> {{ container.Id }}</a></li>
 				</ul>
 			</div>
 		</div>
 		<div class="list-view-pf-main-info">
 			<div class="list-view-pf-left">
+				{% if "-yt" in container.Image %}
+				<span class="fa fa-youtube list-view-pf-icon-sm"></span>
+				{%elif "-ig" in container.Image %}
 				<span class="fa fa-instagram list-view-pf-icon-sm"></span>
+				{%endif %}
 			</div>
 			<div class="list-view-pf-body">
 				<div class="list-view-pf-description">
 					<div class="list-group-item-heading">
-						{{container.Labels | get_item:"astoka.family" }} / {{ container.Names | first | cut:"/" }}
+						{{ container.Names | first | cut:"/" }}
 					</div>
 					<div class="list-group-item-text">
-						<strong>Seed by</strong> <a href="https://instagram.com/{{ container.Labels | get_item:" astoka.seeder " }}">{{ container.Labels | get_item:"astoka.seeder" }}</a>
+						{{container.Labels | get_item:"astoka.family" }} Family, 
+						<strong>Seeded by</strong> <a href="https://instagram.com/{{ container.Labels | get_item:" astoka.seeder " }}">{{ container.Labels | get_item:"astoka.seeder" }}</a>
 					</div>
 				</div>
 
@@ -177,6 +182,7 @@
 					<span class="pficon-error-circle-o pficon"></span>
 					<strong>{{container.Error }}</strong> Errors
 				</div>
+	
 				</div>
 
 			</div>
