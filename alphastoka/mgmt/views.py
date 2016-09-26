@@ -116,6 +116,14 @@ def mgmt_murder(request, container_id):
 	messages.add_message(request, 50, message='The selected Stoka has been taken care of.', extra_tags="success")
 	return HttpResponseRedirect("/") 
 
+def categorization(request):
+	
+	mongo_system = mongo_client['stoka_system']
+		
+	return render(request, "categorization.html",{
+		"category_key": mongo_system.categorizer.find({}).skip(0).limit(1)[0]
+	})
+
 def mgmt_create(request):
 	if request.method == "POST":
 		# cli = Client(base_url='unix:///var/run/docker.sock')

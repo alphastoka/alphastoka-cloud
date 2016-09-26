@@ -1,8 +1,4 @@
-{% extends "base.html" %} 
-{% load humanize %}
-
-{% block third_active %}active{% endblock %} 
-{% block content %}
+{% extends "base.html" %} {% load humanize %} {% block third_active %}active{% endblock %} {% block content %}
 
 <div class="container-fluid">
     <div class="row toolbar-pf">
@@ -71,7 +67,7 @@
 								{{current_collection}} / {{family}} ({{ count | intcomma }})
 							</span>
                         </li>
-                        
+
                         <li>
                             <span class="label label-default">
 								No active filter
@@ -89,49 +85,49 @@
     <!-- /row -->
 </div>
 {% if count == 0 %}
-	<div class="list-group-item list-view-pf-stacked list-view-pf-equalized-column">
-		<div class="list-view-pf-main-info">
-			<div class="list-view-pf-left">
-				<img class="img-circle" src="/static/getstarted2.png" />
-			</div>
-			<div class="list-view-pf-body">
+<div class="list-group-item list-view-pf-stacked list-view-pf-equalized-column">
+    <div class="list-view-pf-main-info">
+        <div class="list-view-pf-left">
+            <img class="img-circle" src="/static/getstarted2.png" />
+        </div>
+        <div class="list-view-pf-body">
 
-				<div class="list-view-pf-description">
-					<h1>Getting Started</h1>
-					Click on Strategy tab to start spawning Stoka.
-				</div>
-			</div>
-		</div>
-	</div>
+            <div class="list-view-pf-description">
+                <h1>Getting Started</h1>
+                Click on Strategy tab to start spawning Stoka.
+            </div>
+        </div>
+    </div>
+</div>
 {% endif %}
 
-<div class="container-fluid container-cards-pf">
 
+<div class="list-group list-view-pf">
+    {% for human in humans %} {% if human.logo_url or human.profile_pic_url %}
+    <div class="list-group-item list-view-pf-stacked list-view-pf-top-align">
 
-
-    <div class="row row-cards-pf">
-        {% for human in humans %}
-        {% if human.logo_url or human.profile_pic_url %}
-        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-            
-            <div class="card-pf card-pf-view card-pf-view-select card-pf-view-multi-select">
-                <div class="card-pf-body">
-                    <div class="card-pf-top-element">
-                       {% if current_collection == "instagram"  %}
-                       <img class="card-pf-icon-circle" style="width:100px;height:100px" src="{{human.profile_pic_url}}"/>
-                       {%else%}
-                       <img class="card-pf-icon-circle" style="width:100px;height:100px" src="{{human.logo_url}}"/>
-                       {%endif%}
+        <div class="list-view-pf-main-info">
+            <div class="list-view-pf-left">
+                {% if current_collection == "instagram" %}
+                <img class="img-circle" style="width:100px;height:100px" src="{{human.profile_pic_url}}" /> {%else%}
+                <img class="img-circle" style="width:100px;height:100px" src="{{human.logo_url}}" /> {%endif%}
+            </div>
+            <div class="list-view-pf-body">
+                <div class="list-view-pf-description">
+                    <div class="list-group-item-heading">
+                        <h2><a href="https://instagram.com/{{human.username}}">{{human.username}} </a></h2>
+                        <h2><a href="{{human.url}}">{{human.title | truncatechars:14}} </a></h2>
                     </div>
-                    <h2 class="card-pf-title text-center">
-                        <a href="https://instagram.com/{{human.username}}">{{human.username}} </a>
-                        <a href="{{human.url}}">{{human.title | truncatechars:14}} </a>
-                    </h2>
-                    <div class="card-pf-items text-center">
-                        <div class="card-pf-item">
-                            <span class="fa fa-heart"></span>
-                            <span class="card-pf-item-text">
-                                {%if human.followed_by.count > 1000000 %}
+                    <div class="list-group-item-text">
+                        {%for k in human.category %}
+                        <div class="label label-info">{{k}}</div>
+                        {%endfor%} {%if human.category|length == 0%} Unable classified with provided <a href="#">training set</a>                        {%endif%}
+                    </div>
+                </div>
+                <div class="list-view-pf-additional-info">
+                    <div class="list-view-pf-additional-info-item">
+                        <span class="fa fa-heart"></span>
+                        <strong>{%if human.followed_by.count > 1000000 %}
                                 {{human.followed_by.count|intword}}
                                 {%else%}
                                 {{human.followed_by.count|intcomma}}
@@ -141,32 +137,35 @@
                                 {{human.stats.subscriber_count|intword}}
                                 {%else%}
                                 {{human.stats.subscriber_count|intcomma}}
-                                {%endif%}
-                            </span>
-                        </div>
-                        <!--<div class="card-pf-item">
-                            <span class="fa fa-check"></span>
-                            <span class="card-pf-item-text">8,500</span>
-                        </div>-->
+                                {%endif%}</strong> Followers
                     </div>
-                    <p class="card-pf-info text-center">
-                        <textarea style="outline:none;border:none;resize: none;" readonly>{{human.biography}}{{human.description}}</textarea>
-                    </p>
-                </div>
-                <div class="card-pf-view-checkbox">
-                    <input type="checkbox">
+                    {%if human.media %}
+                    <div class="list-view-pf-additional-info-item">
+                        <span class="fa fa-flag"></span>
+                        <strong>
+                                {{human.media.count|intcomma}}
+                                </strong> Posts
+                    </div>
+                    {%endif%}
+                    {%if human.stats %}
+                    <div class="list-view-pf-additional-info-item">
+                        <span class="fa fa-flag"></span>
+                        <strong>
+                                {{human.stats.subscriber_count|intcomma}}
+                                </strong> Subscribers
+                    </div>
+                    {%endif%}
                 </div>
             </div>
-            
         </div>
-        {%endif%}
-        {%endfor%}
 
     </div>
+    {%endif%} {%endfor%}
+
     <div class="container-fluid">
         <ul class="pagination">
             {% for page in pages%}
-            <li {% if page == current_page %}class="active"{%endif%}><a href="results?family={{family}}&collection={{current_collection}}&page={{page}}">{{page}}</a></li>
+            <li {% if page == current_page %}class="active" {%endif%}><a href="results?family={{family}}&collection={{current_collection}}&page={{page}}">{{page}}</a></li>
             {% endfor %}
         </ul>
     </div>
@@ -177,33 +176,37 @@
 {% if dbs %}
 <!--modal-->
 <form action="/results">
-<div id="wizard-modal" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Family selection wizard</h4>
-      </div>
-      <div class="modal-body">
-        <p>Please select a family. Note that if you have just started your Stoka it may take a while before result set populates.</p>
+    <div id="wizard-modal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Family selection wizard</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Please select a family. Note that if you have just started your Stoka it may take a while before result
+                        set populates.</p>
 
-        
-        <select class="selectpicker" name="family">
+
+                    <select class="selectpicker" name="family">
             {% for db in dbs %}
 			<option value="{{ db }}" {% if not "stoka_" in db %}disabled{% endif %}>{{db}}</option>
             {% endfor %}
 		</select>
-        <select class="selectpicker" name="collection">
+                    <select class="selectpicker" name="collection">
             {% for collection in collections %}
 			<option value="{{ collection }}">{{collection}}</option>
             {% endfor %}
 		</select>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Choose family</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Choose family</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 </form>
 <script>
     $(document).ready(function(){
@@ -211,8 +214,4 @@
             backdrop: 'static'
         });
     });
-</script>
-{% endif %}
-
-
-{% endblock %}
+</script> {% endif %} {% endblock %}
