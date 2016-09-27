@@ -56,7 +56,12 @@ def index(request):
 		"images": images
 	})
 
+
 def results_export(request):
+	"""
+	Export to excel
+	"""
+
 	db = request.GET.get("family")
 	collection = request.GET.get("collection", "instagram")
 	mongo_db = mongo_client[db]
@@ -68,7 +73,6 @@ def results_export(request):
 	i = 0
 	for x in humans:
 		fields = ['username', 'biography', '_dna', 'followed_by', 'category', 'language', 'predicted_age', '_seed_username', 'is_verified', 'caption', 'profile_pic_url', 'id']
-
 
 		if collection == 'youtube':
 			x['subscriber_count'] = x['stats']['subscriber_count']
@@ -96,22 +100,8 @@ def results_export(request):
 
 		ws.append(r)
 		i = i + 1
-		# print(ws)
 
 	response = HttpResponse(content_type='application/octet-stream')
-
-	# for response in (response,):
-	# 	fields = ['username', 'biography', '_dna', 'followed_by', 'category', 'language', 'predicted_age', '_seed_username', 'is_verified', 'media', 'profile_pic_url', '_id', 'id']
-	# 	if collection == "youtube":
-	# 		fields = [ 'phone', 'country', 'stats', 'subscriber_count', 'category', 'predicted_age', 'view_count', 'language', '_id', 'url', '_dna', '_seed_username', 'language', 'description', 'title', 'id', 'logo_url', 'email', 'medium']
-	# 	writer = csv.DictWriter(response, fieldnames=fields)
-	# 	writer.writeheader()
-	# 	for x in humans:
-	# 		if collection == 'youtube':
-	# 			x['subscriber_count'] = x['stats']['subscriber_count']
-	# 			x['view_count'] = x['stats']['view_count']
-	# 			x['description'] = x['description'].strip()
-	# 		writer.writerow(x)
 
 	response['Content-Disposition'] = 'attachment; filename="export_%s_%s.xlsx"' % (db,collection)
 	wb.save(response)
@@ -134,7 +124,6 @@ def results(request):
 	
 	pages = abbreviated_pages(math.ceil(count/50),1)
 	
-	# self.mongo_db = self.mongo_client['stoka_' + ]
 	return render(request, "results.html", {
 		"family": db,
 		"count": count,
@@ -144,6 +133,7 @@ def results(request):
 		"pages": pages,
 		"current_page" : current_page
 	})
+	
 def processors(request):
 	return render(request, "processors.html")
 
@@ -184,7 +174,7 @@ def mgmt_create(request):
 			"RABBIT_USR": "rabbitmq",
 			"RABBIT_PWD": "Nc77WrHuAR58yUPl",
 			"RABBIT_PORT": "5672",
-			"SEED_ID": "@" + seeder_username,
+			"SEED_ID": seeder_username,
 			"GROUP_NAME" : group_name
 		}
 
