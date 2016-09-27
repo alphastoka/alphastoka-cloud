@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib import messages
 from pymongo import MongoClient
 import re, math, json, csv
+from openpyxl import Workbook
 
 cli = Client(base_url='unix:///var/run/docker.sock')
 mongo_client = MongoClient("mongodb://54.169.89.105:27017")
@@ -59,27 +60,61 @@ def results_export(request):
 	db = request.GET.get("family")
 	collection = request.GET.get("collection", "instagram")
 	mongo_db = mongo_client[db]
-	humans = mongo_db[collection].find({}).sort([("stats.subscriber_count", -1), ("followed_by", -1)])
-	response = HttpResponse(content_type='text/csv')
-	for response in (response,):
-		fields = ['username', 'biography', '_dna', 'followed_by', 'category', 'language', 'predicted_age', '_seed_username', 'is_verified', 'media', 'profile_pic_url', '_id', 'id']
-		if collection == "youtube":
-			fields = [ 'phone', 'country', 'stats', 'subscriber_count', 'category', 'predicted_age', 'view_count', 'language', '_id', 'url', '_dna', '_seed_username', 'language', 'description', 'title', 'id', 'logo_url', 'email', 'medium']
-		writer = csv.DictWriter(response, fieldnames=fields)
-		writer.writeheader()
-		for x in humans:
-			if len(x['language']) > 0:
-				x['language'] = x['language'][0]
-				
-			if collection == 'youtube':
-				x['subscriber_count'] = x['stats']['subscriber_count']
-				x['view_count'] = x['stats']['view_count']
-				x['description'] = x['description'].strip()
-			writer.writerow(x)
-
+	humans = mongo_db[collection].find({})
 	
-	response['Content-Disposition'] = 'attachment; filename="export_%s_%s.csv"' % (db,collection)
+	wb = Workbook()
+	ws = wb.active
 
+	i = 0
+	for x in humans:
+		fields = ['username', 'biography', '_dna', 'followed_by', 'category', 'language', 'predicted_age', '_seed_username', 'is_verified', 'caption', 'profile_pic_url', 'id']
+
+
+		if collection == 'youtube':
+			x['subscriber_count'] = x['stats']['subscriber_count']
+			x['view_count'] = x['stats']['view_count']
+			x['description'] = x['description'].strip()
+			fields = [ 'phone', 'country', 'subscriber_count', 'view_count', 'category', 'predicted_age', 'language', 'url', '_dna', '_seed_username', 'language', 'description', 'title', 'id', 'logo_url', 'email', 'medium']
+		else:
+			caption = ""
+			for m in x['media']['nodes']:
+				if "caption" in m:
+					caption = str(caption) + " " +  str(m["caption"])
+
+			x['caption'] = caption
+
+		if i == 0:
+			ws.append(fields)
+
+		r = []
+		for col in fields:
+			if col == "followed_by":
+				r.append(str(x[col]["count"]))
+			else:	
+				cleaned = re.sub(r'[^ก-๙a-zA-Z0-9- ]+', '*', str(x[col]).replace("\n", ""))
+				r.append(cleaned)
+
+		ws.append(r)
+		i = i + 1
+		# print(ws)
+
+	response = HttpResponse(content_type='application/octet-stream')
+
+	# for response in (response,):
+	# 	fields = ['username', 'biography', '_dna', 'followed_by', 'category', 'language', 'predicted_age', '_seed_username', 'is_verified', 'media', 'profile_pic_url', '_id', 'id']
+	# 	if collection == "youtube":
+	# 		fields = [ 'phone', 'country', 'stats', 'subscriber_count', 'category', 'predicted_age', 'view_count', 'language', '_id', 'url', '_dna', '_seed_username', 'language', 'description', 'title', 'id', 'logo_url', 'email', 'medium']
+	# 	writer = csv.DictWriter(response, fieldnames=fields)
+	# 	writer.writeheader()
+	# 	for x in humans:
+	# 		if collection == 'youtube':
+	# 			x['subscriber_count'] = x['stats']['subscriber_count']
+	# 			x['view_count'] = x['stats']['view_count']
+	# 			x['description'] = x['description'].strip()
+	# 		writer.writerow(x)
+
+	response['Content-Disposition'] = 'attachment; filename="export_%s_%s.xlsx"' % (db,collection)
+	wb.save(response)
 	return response
 
 def results(request):
