@@ -91,7 +91,7 @@ def results_export(request):
 			if col == "followed_by":
 				r.append(str(x[col]["count"]))
 			else:	
-				cleaned = re.sub(r'[^ก-๙a-zA-Z0-9- ]+', '*', str(x[col]).replace("\n", ""))
+				cleaned = re.sub(r'[^ก-๙a-zA-Z0-9-._ ]+', '*', str(x[col]).replace("\n", ""))
 				r.append(cleaned)
 
 		ws.append(r)
