@@ -62,16 +62,18 @@ def results_export(request):
 	humans = mongo_db[collection].find({}).sort([("stats.subscriber_count", -1), ("followed_by", -1)])
 	response = HttpResponse(content_type='text/csv')
 	for response in (response,):
-		fields = ['username', 'biography', '_dna', 'followed_by', 'category', 'predicted_age', '_seed_username', 'is_verified', 'media', 'profile_pic_url', '_id', 'id']
+		fields = ['username', 'biography', '_dna', 'followed_by', 'category', 'language', 'predicted_age', '_seed_username', 'is_verified', 'media', 'profile_pic_url', '_id', 'id']
 		if collection == "youtube":
 			fields = [ 'phone', 'country', 'stats', 'subscriber_count', 'category', 'predicted_age', 'view_count', 'language', '_id', 'url', '_dna', '_seed_username', 'language', 'description', 'title', 'id', 'logo_url', 'email', 'medium']
 		writer = csv.DictWriter(response, fieldnames=fields)
 		writer.writeheader()
 		for x in humans:
+			if len(x['language']) > 0:
+				x['language'] = x['language'][0]
+				
 			if collection == 'youtube':
 				x['subscriber_count'] = x['stats']['subscriber_count']
 				x['view_count'] = x['stats']['view_count']
-				x['language'] = x['language'][0]
 				x['description'] = x['description'].strip()
 			writer.writerow(x)
 
