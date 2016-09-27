@@ -23,6 +23,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^mgmt/create', views.mgmt_create),
     url(r'^mgmt/murder/([^\s]+)', views.mgmt_murder),
+    url(r'^mgmt/jail/([^\s]+)', views.mgmt_jail),
+    url(r'^mgmt/release/([^\s]+)', views.mgmt_release),
     url(r'^results/export', views.results_export),
     url(r'^results', views.results),
     url(r'^categorization', views.categorization),

@@ -32,7 +32,7 @@ def abbreviated_pages(n, page):
 # Create your views here.
 def index(request):
 	cli = Client(base_url='unix:///var/run/docker.sock')
-	containers = cli.containers()
+	containers = cli.containers(filters={"status": "running"}) + cli.containers(filters={"status": "paused"})
 	images = []
 	for im in cli.images():
 		if 'stoka-' in ','.join(im.get('RepoTags')):
@@ -146,6 +146,18 @@ def results(request):
 	})
 def processors(request):
 	return render(request, "processors.html")
+
+def mgmt_jail(request, container_id):
+	# cli = Client(base_url='unix:///var/run/docker.sock')
+	cli.pause(container=container_id)
+	messages.add_message(request, 50, message='The selected Stoka has been convicted and jailed.', extra_tags="success")
+	return HttpResponseRedirect("/") 
+
+def mgmt_release(request, container_id):
+	# cli = Client(base_url='unix:///var/run/docker.sock')
+	cli.unpause(container=container_id)
+	messages.add_message(request, 50, message='The selected Stoka has been released and is back running.', extra_tags="success")
+	return HttpResponseRedirect("/") 
 
 def mgmt_murder(request, container_id):
 	# cli = Client(base_url='unix:///var/run/docker.sock')
