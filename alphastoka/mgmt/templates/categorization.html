@@ -1,4 +1,9 @@
-{% extends "base.html" %} {% load humanize %} {% block second_active %}active{% endblock %} {% block content %}
+{% extends "base.html" %} 
+{% load humanize %} 
+
+{% block second_active %}active{% endblock %} 
+
+{% block content %}
 
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -13,12 +18,12 @@
                     <div class="form-group">
                         <div class="col-sm-3">
                             <input type="text" id="modalInput" class="form-control" value="{{x}}"></div>
-                        <div class="col-sm-9">
-                            {% for token in category_key|get_item:x%}
-                            <span class="label label-info">{{token}}</span>
-                            {% endfor %}
-                            <span class="label label-success"><i class="fa fa-plus"></i></span>
-                        </div>
+                            <div class="col-sm-9">
+                                {% for token in category_key|get_item:x%}
+                                <span class="label label-info">{{token}}</span>
+                                {% endfor %}
+                                <span class="label label-success"><i class="fa fa-plus"></i></span>
+                            </div>
                     </div>
                     {% endif %}
                     {%endfor%}
