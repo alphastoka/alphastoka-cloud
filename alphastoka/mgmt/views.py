@@ -78,7 +78,7 @@ def results_export(request):
 			x['subscriber_count'] = x['stats']['subscriber_count']
 			x['view_count'] = x['stats']['view_count']
 			x['description'] = x['description'].strip()
-			fields = [ 'phone', 'country', 'subscriber_count', 'view_count', 'category', 'predicted_age', 'language', 'url', '_dna', '_seed_username', 'language', 'description', 'title', 'id', 'logo_url', 'email', 'medium']
+			fields = [ 'phone', 'country', 'subscriber_count', 'video_descriptions', 'view_count', 'category', 'predicted_age', 'language', 'url', '_dna', '_seed_username', 'language', 'description', 'title', 'id', 'logo_url', 'email', 'medium']
 		else:
 			caption = ""
 			for m in x['media']['nodes']:
