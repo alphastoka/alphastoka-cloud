@@ -5,6 +5,7 @@ from django.contrib import messages
 from pymongo import MongoClient
 import re, math, json, csv
 from openpyxl import Workbook
+# import xlsxwriter
 
 cli = Client(base_url='unix:///var/run/docker.sock')
 mongo_client = MongoClient("mongodb://54.169.89.105:27017")
@@ -67,8 +68,8 @@ def results_export(request):
 	mongo_db = mongo_client[db]
 	humans = mongo_db[collection].find({})
 	
-	wb = Workbook()
-	ws = wb.active
+	wb = Workbook(write_only=True)
+	ws = wb.create_sheet()
 
 	i = 0
 	for x in humans:
@@ -94,8 +95,8 @@ def results_export(request):
 		for col in fields:
 			if col == "followed_by":
 				r.append(str(x[col]["count"]))
-			else:	
-				cleaned = re.sub(r'[^ก-๙a-zA-Z0-9-._ ]+', '*', str(x[col]).replace("\n", ""))
+			else:
+				cleaned = re.sub(r'[^ก-๙a-zA-Z0-9-._~ ]+', '', str(x[col]).replace("\n", ""))
 				r.append(cleaned)
 
 		ws.append(r)
