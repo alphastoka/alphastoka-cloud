@@ -97,7 +97,7 @@ def results_export(request):
 				if col == "followed_by":
 					r.append(str(x[col]["count"]))
 				else:
-					cleaned = re.sub(r'[^ก-๙a-zA-Z0-9-._~ ]+', '', str(x[col]).replace("\n", ""))
+					cleaned = re.sub(r'[^ก-๙a-zA-Z0-9-._~:/ ]+', '', str(x[col]).replace("\n", ""))
 					r.append(cleaned)
 			except KeyError:
 				r.append("n/a")
@@ -113,9 +113,12 @@ def results_export(request):
 
 def results(request):
 	db = request.GET.get("family")
+	search = request.GET.get("search")
+	#db.instagram.find({ 'media.nodes.caption': { '$regex': '#rasta r' } }).count()
 	collections = ["instagram", "youtube", "facebook"]
 	collection = request.GET.get("collection", "instagram")
 	current_page = request.GET.get("page", "1")
+	
 	if not db:
 		return render(request, "results.html", {
 			"dbs": mongo_client.database_names(),
@@ -123,14 +126,24 @@ def results(request):
 		})
 	mongo_db = mongo_client[db]
 
-	count = mongo_db[collection].count({})
-	humans = mongo_db[collection].find({}).sort([("stats.subscriber_count", -1), ("followed_by", -1)]).skip(50*(int(current_page)-1)).limit(50)
-	
+	filter = {}
+	if search is not None:
+		filter = { '$or' : [
+			{ 'media.nodes.caption': { '$regex': str(search) } },
+			{ 'biography': { '$regex': str(search) } }
+		] }
+	else:
+		search = ""
+
+	count = mongo_db[collection].count(filter)
+	humans = mongo_db[collection].find(filter).sort([("stats.subscriber_count", -1), ("followed_by", -1)]).skip(50*(int(current_page)-1)).limit(50)
+
 	pages = abbreviated_pages(math.ceil(count/50),1)
 	
 	return render(request, "results.html", {
 		"family": db,
 		"count": count,
+		"search": search,
 		"humans": humans,
 		"collections": collections,
 		"current_collection": collection,
