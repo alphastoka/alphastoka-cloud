@@ -171,7 +171,7 @@
     <div class="container-fluid">
         <ul class="pagination">
             {% for page in pages%}
-            <li {% if page == current_page %}class="active" {%endif%}><a href="results?family={{family}}&collection={{current_collection}}&page={{page}}">{{page}}</a></li>
+            <li {% if page == current_page %}class="active" {%endif%}><a href="results?family={{family}}&collection={{current_collection}}&page={{page}}&search={{search}}">{{page}}</a></li>
             {% endfor %}
         </ul>
     </div>
