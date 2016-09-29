@@ -139,7 +139,7 @@ def results(request):
 		search = ""
 
 	count = mongo_db[collection].count(filter)
-	humans = mongo_db[collection].find(filter).sort([("stats.subscriber_count", -1), ("followed_by", -1)]).skip(50*(int(current_page)-1)).limit(50)
+	humans = mongo_db[collection].find(filter).sort([("stats.subscriber_count", -1), ("followed_by.count", -1)]).skip(50*(int(current_page)-1)).limit(50)
 
 	pages = abbreviated_pages(math.ceil(count/50), int(current_page))
 	
