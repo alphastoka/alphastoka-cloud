@@ -93,11 +93,14 @@ def results_export(request):
 
 		r = []
 		for col in fields:
-			if col == "followed_by":
-				r.append(str(x[col]["count"]))
-			else:
-				cleaned = re.sub(r'[^ก-๙a-zA-Z0-9-._~ ]+', '', str(x[col]).replace("\n", ""))
-				r.append(cleaned)
+			try:
+				if col == "followed_by":
+					r.append(str(x[col]["count"]))
+				else:
+					cleaned = re.sub(r'[^ก-๙a-zA-Z0-9-._~ ]+', '', str(x[col]).replace("\n", ""))
+					r.append(cleaned)
+			except KeyError:
+				r.append("n/a")
 
 		ws.append(r)
 		i = i + 1
