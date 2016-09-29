@@ -1,0 +1,2 @@
+openpyxl==2.4.0
+pymongo==3.3.0

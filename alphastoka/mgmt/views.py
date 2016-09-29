@@ -130,7 +130,10 @@ def results(request):
 	if search is not None:
 		filter = { '$or' : [
 			{ 'media.nodes.caption': { '$regex': str(search) } },
-			{ 'biography': { '$regex': str(search) } }
+			{ 'biography': { '$regex': str(search) } },
+			{ 'video_descriptions.description': {'$regex'  : str(search)} },
+			{ 'video_descriptions.title': {'$regex'  : str(search)} },
+			{ 'description': {'$regex'  : str(search)} }
 		] }
 	else:
 		search = ""
@@ -138,7 +141,7 @@ def results(request):
 	count = mongo_db[collection].count(filter)
 	humans = mongo_db[collection].find(filter).sort([("stats.subscriber_count", -1), ("followed_by", -1)]).skip(50*(int(current_page)-1)).limit(50)
 
-	pages = abbreviated_pages(math.ceil(count/50),1)
+	pages = abbreviated_pages(math.ceil(count/50), int(current_page))
 	
 	return render(request, "results.html", {
 		"family": db,
@@ -185,6 +188,7 @@ def mgmt_create(request):
 		# cli = Client(base_url='unix:///var/run/docker.sock')
 		dna = request.POST.get("dna").replace(" ", "")
 		group_name = request.POST.get("group_name").replace(" ", "")
+		depth = request.POST.get("depth", "12")
 		seeder_username = request.POST.get("seeder_username").replace(" ", "")
 		envs = {
 			"RABBIT_HOST": "rabbitmqhost",
@@ -192,7 +196,8 @@ def mgmt_create(request):
 			"RABBIT_PWD": "Nc77WrHuAR58yUPl",
 			"RABBIT_PORT": "5672",
 			"SEED_ID": seeder_username,
-			"GROUP_NAME" : group_name
+			"GROUP_NAME" : group_name,
+			"DEPTH": int(depth)
 		}
 
 		lbl = {"astoka.seeder": seeder_username, "astoka.family": group_name }
