@@ -203,7 +203,7 @@ def mgmt_create(request):
 			"SEED_ID": seeder_username,
 			"GROUP_NAME" : group_name,
 			"DEPTH": int(depth),
-			"COOKIE": base64.b64encode(cookie.encode('utf-8')).decode('utf-8')
+			"COOKIE": base64.b64encode(cookie.encode('ascii')).decode('ascii')
 		}
 
 		lbl = {"astoka.seeder": seeder_username, "astoka.family": group_name }
