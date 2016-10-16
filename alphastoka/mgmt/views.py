@@ -3,8 +3,9 @@ from docker import Client
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib import messages
 from pymongo import MongoClient
-import re, math, json, csv
+import re, math, json, csv,base64
 from openpyxl import Workbook
+
 # import xlsxwriter
 
 cli = Client(base_url='unix:///var/run/docker.sock')
@@ -202,7 +203,7 @@ def mgmt_create(request):
 			"SEED_ID": seeder_username,
 			"GROUP_NAME" : group_name,
 			"DEPTH": int(depth),
-			"COOKIE": "'%s'" % (cookie,)
+			"COOKIE": base64.b64encode(cookie)
 		}
 
 		lbl = {"astoka.seeder": seeder_username, "astoka.family": group_name }
