@@ -200,7 +200,7 @@ def mgmt_create(request):
 			"SEED_ID": seeder_username,
 			"GROUP_NAME" : group_name,
 			"DEPTH": int(depth),
-			"COOKIE": cookie
+			"COOKIE": "'%s'" % (cookie,)
 		}
 
 		lbl = {"astoka.seeder": seeder_username, "astoka.family": group_name }
