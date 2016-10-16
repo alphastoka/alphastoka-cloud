@@ -190,6 +190,8 @@ def mgmt_create(request):
 		group_name = request.POST.get("group_name").replace(" ", "")
 		depth = request.POST.get("depth", "12")
 		seeder_username = request.POST.get("seeder_username").replace(" ", "")
+		cookie = request.POST.get("cookie", "")
+
 		envs = {
 			"RABBIT_HOST": "rabbitmqhost",
 			"RABBIT_USR": "rabbitmq",
@@ -197,7 +199,8 @@ def mgmt_create(request):
 			"RABBIT_PORT": "5672",
 			"SEED_ID": seeder_username,
 			"GROUP_NAME" : group_name,
-			"DEPTH": int(depth)
+			"DEPTH": int(depth),
+			"COOKIE": cookie
 		}
 
 		lbl = {"astoka.seeder": seeder_username, "astoka.family": group_name }
