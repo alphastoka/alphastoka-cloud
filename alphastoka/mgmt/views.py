@@ -8,7 +8,7 @@ from openpyxl import Workbook
 # import xlsxwriter
 
 cli = Client(base_url='unix:///var/run/docker.sock')
-mongo_client = MongoClient("mongodb://54.169.89.105:27017")
+mongo_client = MongoClient("mongodb://cloud.alphastoka.com:27017")
 
 def abbreviated_pages(n, page):
 
