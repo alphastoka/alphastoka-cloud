@@ -38,6 +38,11 @@ def get_item(dictionary, key):
     return dictionary.get(key)
 
 @register.filter
+def add_int(v, b):
+    return int(v) + int(b)
+
+
+@register.filter
 def unixtime(intTime):
     that = datetime.fromtimestamp(int(intTime))
     total_time=(datetime.now() - that)
