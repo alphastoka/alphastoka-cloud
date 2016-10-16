@@ -192,6 +192,8 @@ def mgmt_create(request):
 		seeder_username = request.POST.get("seeder_username").replace(" ", "")
 		cookie = request.POST.get("cookie", "")
 
+		print(cookie)
+
 		envs = {
 			"RABBIT_HOST": "rabbitmqhost",
 			"RABBIT_USR": "rabbitmq",
