@@ -120,7 +120,7 @@
                 <div class="list-view-pf-description">
                     <div class="list-group-item-heading">
                         <h2><a href="https://instagram.com/{{human.username}}">{{human.username}} </a></h2>
-                        <h2><a href="{{human.url}}">{{human.title | truncatechars:14}} </a></h2>
+                        <h2><a href="{{human.url}}">{{human.title | truncatechars:25}} </a></h2>
                     </div>
                     <div class="list-group-item-text">
                         {% if current_collection == "instagram" %}
@@ -158,6 +158,7 @@
                     <div class="list-view-pf-additional-info-item">
                         <span class="fa fa-globe"></span>
                         <strong>{{human.language}}</strong>
+                        <strong>{{human.email}}</strong>
                     </div>
                     {%if human.media %}
                     <div class="list-view-pf-additional-info-item">

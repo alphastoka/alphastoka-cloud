@@ -81,13 +81,15 @@ def results_export(request):
 			x['view_count'] = x['stats']['view_count']
 			x['description'] = x['description'].strip()
 			fields = [ 'phone', 'country', 'subscriber_count', 'video_descriptions', 'view_count', 'category', 'predicted_age', 'language', 'url', '_dna', '_seed_username', 'language', 'description', 'title', 'id', 'logo_url', 'email', 'medium']
-		else:
+		elif collection == "instagram":
 			caption = ""
 			for m in x['media']['nodes']:
 				if "caption" in m:
 					caption = str(caption) + " " +  str(m["caption"])
 
 			x['caption'] = caption
+		elif collection == "facebook":
+			fields = ['mentions', 'likes', 'url', 'category', 'title', 'description']
 
 		if i == 0:
 			ws.append(fields)
@@ -140,7 +142,7 @@ def results(request):
 		search = ""
 
 	count = mongo_db[collection].count(filter)
-	humans = mongo_db[collection].find(filter).sort([("stats.subscriber_count", -1), ("followed_by.count", -1)]).skip(50*(int(current_page)-1)).limit(50)
+	humans = mongo_db[collection].find(filter).sort([("likes", -1), ("stats.subscriber_count", -1), ("followed_by.count", -1)]).skip(50*(int(current_page)-1)).limit(50)
 
 	pages = abbreviated_pages(math.ceil(count/50), int(current_page))
 	
