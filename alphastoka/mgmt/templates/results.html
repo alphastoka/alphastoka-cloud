@@ -113,8 +113,10 @@
             <div class="list-view-pf-left">
                 {% if current_collection == "instagram" %}
                 <img class="img-circle" style="width:100px;height:100px" src="{{human.profile_pic_url}}" /> 
-                {%else%}
+                {%elif current_collection == "youtube" %}
                 <img class="img-circle" style="width:100px;height:100px" src="{{human.logo_url}}" /> 
+                {%elif current_collection == "facebook" %}
+                <img class="img-circle" style="width:100px;height:100px" src="{{human.emblem}}" /> 
                 {%endif%}
             </div>
             <div class="list-view-pf-body">
