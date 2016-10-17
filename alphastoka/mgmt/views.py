@@ -20,7 +20,7 @@ def abbreviated_pages(n, page):
 		pages = (set(range(1, 6))
 		         | set(range(max(1, page - 2), min(page + 3, n + 1)))
                  | set(range(n - 2, n + 1)))
-	
+
 	def display():
 		last_page = 0
 		for p in sorted(pages):
@@ -42,7 +42,7 @@ def index(request):
 			images.append(im)
 
 	for container in containers:
-		container["Discovered"] = 0 
+		container["Discovered"] = 0
 		container["Error"] = 0
 		sstr = cli.logs(container=container.get("Id"), tail=300)
 		m = re.findall(r"@astoka.progress\s+([0-9]+)", sstr.decode("utf-8"))
@@ -68,7 +68,7 @@ def results_export(request):
 	collection = request.GET.get("collection", "instagram")
 	mongo_db = mongo_client[db]
 	humans = mongo_db[collection].find({})
-	
+
 	wb = Workbook(write_only=True)
 	ws = wb.create_sheet()
 
@@ -89,7 +89,7 @@ def results_export(request):
 
 			x['caption'] = caption
 		elif collection == "facebook":
-			fields = ['mentions', 'likes', 'url', 'category', 'title', 'description']
+			fields = ['mentions', 'likes', 'url', 'category', 'title', 'description', 'email']
 
 		if i == 0:
 			ws.append(fields)
@@ -100,7 +100,7 @@ def results_export(request):
 				if col == "followed_by":
 					r.append(str(x[col]["count"]))
 				else:
-					cleaned = re.sub(r'[^ก-๙a-zA-Z0-9-._~:/ ]+', '', str(x[col]).replace("\n", ""))
+					cleaned = re.sub(r'[^ก-๙@a-zA-Z0-9-._~:/ ]+', '', str(x[col]).replace("\n", ""))
 					r.append(cleaned)
 			except KeyError:
 				r.append("n/a")
@@ -121,7 +121,7 @@ def results(request):
 	collections = ["instagram", "youtube", "facebook"]
 	collection = request.GET.get("collection", "instagram")
 	current_page = request.GET.get("page", "1")
-	
+
 	if not db:
 		return render(request, "results.html", {
 			"dbs": mongo_client.database_names(),
@@ -145,7 +145,7 @@ def results(request):
 	humans = mongo_db[collection].find(filter).sort([("likes", -1), ("stats.subscriber_count", -1), ("followed_by.count", -1)]).skip(50*(int(current_page)-1)).limit(50)
 
 	pages = abbreviated_pages(math.ceil(count/50), int(current_page))
-	
+
 	return render(request, "results.html", {
 		"family": db,
 		"count": count,
@@ -156,7 +156,7 @@ def results(request):
 		"pages": pages,
 		"current_page" : current_page
 	})
-	
+
 def processors(request):
 	return render(request, "processors.html")
 
@@ -164,24 +164,24 @@ def mgmt_jail(request, container_id):
 	# cli = Client(base_url='unix:///var/run/docker.sock')
 	cli.pause(container=container_id)
 	messages.add_message(request, 50, message='The selected Stoka has been convicted and jailed.', extra_tags="success")
-	return HttpResponseRedirect("/") 
+	return HttpResponseRedirect("/")
 
 def mgmt_release(request, container_id):
 	# cli = Client(base_url='unix:///var/run/docker.sock')
 	cli.unpause(container=container_id)
 	messages.add_message(request, 50, message='The selected Stoka has been released and is back running.', extra_tags="success")
-	return HttpResponseRedirect("/") 
+	return HttpResponseRedirect("/")
 
 def mgmt_murder(request, container_id):
 	# cli = Client(base_url='unix:///var/run/docker.sock')
 	cli.kill(container=container_id)
 	messages.add_message(request, 50, message='The selected Stoka has been taken care of.', extra_tags="success")
-	return HttpResponseRedirect("/") 
+	return HttpResponseRedirect("/")
 
 def categorization(request):
-	
+
 	mongo_system = mongo_client['stoka_system']
-		
+
 	return render(request, "categorization.html",{
 		"category_key": mongo_system.categorizer.find({}).skip(0).limit(1)[0]
 	})
@@ -212,11 +212,11 @@ def mgmt_create(request):
 
 		if dna is None:
 			messages.error(request, 'You did not specify a DNA for the Stoka instance.')
-			return HttpResponseRedirect("/") 
-		
+			return HttpResponseRedirect("/")
+
 		if len(seeder_username) <= 2:
 			messages.add_message(request, 50, message='A seeder is required to spawn a Stoka Instance.', extra_tags="danger")
-			return HttpResponseRedirect("/") 
+			return HttpResponseRedirect("/")
 
 		linkconf = cli.create_host_config(
 			links=[('rabbitmq','rabbitmqhost')]
@@ -225,5 +225,5 @@ def mgmt_create(request):
 		con = cli.create_container(image=dna, labels=lbl, environment=envs, host_config=linkconf)
 		response = cli.start(container=con.get("Id"))
 		messages.add_message(request, 50, message='Stoka instance spawn successfully.', extra_tags="success")
-		
-	return HttpResponseRedirect("/") 
+
+	return HttpResponseRedirect("/")
